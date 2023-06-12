@@ -1,0 +1,13 @@
+.container {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.center {
+    position: relative;
+    width: 50%;
+    min-width: 265px;
+    max-width: 400px;
+}

@@ -1,0 +1,34 @@
+{
+  "name": "mytrip-hokkaido-app",
+  "version": "0.0.1",
+  "description": "A travel planner app built using Next.JS powered by OpenAI API.",
+  "scripts": {
+    "dev": "next dev -p 4000",
+    "build": "next build",
+    "start": "next start",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.3",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.4",
+    "next": "^13.4.5",
+    "openai": "^3.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zustand": "^4.3.8"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^7.1.0-alpha.30",
+    "@storybook/addon-interactions": "^7.1.0-alpha.30",
+    "@storybook/addon-links": "^7.1.0-alpha.30",
+    "@storybook/blocks": "^7.1.0-alpha.30",
+    "@storybook/nextjs": "^7.1.0-alpha.30",
+    "@storybook/react": "^7.1.0-alpha.30",
+    "@storybook/testing-library": "^0.0.14-next.2",
+    "storybook": "^7.1.0-alpha.30"
+  }
+}
