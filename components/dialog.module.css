@@ -53,6 +53,10 @@
     padding: 1rem;
 }
 
+.name {
+    font-weight: 600;
+}
+
 /*
 @media (prefers-color-scheme: dark) {
     .dialog {

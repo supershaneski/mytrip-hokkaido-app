@@ -14,6 +14,7 @@
     --color-blue-text: #00D8FF;
 }
 
+/*
 @media (prefers-color-scheme: dark) {
 
     :root {
@@ -22,6 +23,7 @@
     }
 
 }
+*/
 
 /*
 html, body {

@@ -1,5 +1,6 @@
 {
-    "placeholder-search": ["Where do you want to go?", "何処に行きたいですか？"],
+    "placeholder-search": ["Day trip in Sapporo", "何処に行きたいですか？"],
+    "placeholder-search2": ["Where do you want to go?", "何処に行きたいですか？"],
 
     "app-title": ["Discussion App", "ディスカッションアプリ"],
     "dialog-title": ["New Topic", "新しいトピック"],

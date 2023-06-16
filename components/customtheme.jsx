@@ -19,11 +19,12 @@ const lightTheme = createTheme({
 
 export default function CustomTheme({ children }) {
 
-    const isDarkMode = useAppStore((state) => state.darkMode)
+    //const isDarkMode = useAppStore((state) => state.darkMode)
+    //<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
     
     return (
         <NoSsr>
-            <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+            <ThemeProvider theme={lightTheme}>
                 { children }
             </ThemeProvider>
         </NoSsr>

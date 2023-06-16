@@ -88,44 +88,7 @@ export default function Dialog({
                     </div>
                 }
                 <div className={classes.caption}>
-                    <Box 
-                    component="form" 
-                    onSubmit={handleSubmit}
-                    noValidate>
-                        <TextField 
-                        placeholder='Write your thoughts...'
-                        //disabled={isLoading}
-                        fullWidth
-                        multiline
-                        maxRows={6}
-                        inputRef={inputRef}
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
-                        /*inputProps={{
-                            className: classes.chatInput,
-                        }}*/
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <>
-                                    <IconButton
-                                    disabled={inputText.length === 0}
-                                    onClick={() => setInputText('')}
-                                    >
-                                        <ClearIcon />
-                                    </IconButton>
-                                    <IconButton
-                                    disabled={inputText.length === 0}
-                                    onClick={handleSubmit}
-                                    >
-                                        <SendIcon />
-                                    </IconButton>
-                                    </>
-                                </InputAdornment>
-                            ),
-                        }}
-                        />
-                    </Box>
+                    Are you sure you want to delete<br /><span className={classes.name}>{caption}</span>?
                 </div>
                 {
                     confirmStatus === 0 &&
