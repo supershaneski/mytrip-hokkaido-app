@@ -9,11 +9,11 @@ The application is built using Next.js 13, powered by the OpenAI API, and suppor
 
 Type the location and activity you want to do anywhere in Hokkaido, the app will generate the itinerary.
 
-![Search](./docs/screenshot3.png "Search")
+![Search](./docs/screenshot1.png "Search")
 
 Sample itinerary
 
-![Sample itinerary](./docs/screenshot3.png "Sample itinerary")
+![Sample itinerary](./docs/screenshot2.png "Sample itinerary")
 
 
 # Code
