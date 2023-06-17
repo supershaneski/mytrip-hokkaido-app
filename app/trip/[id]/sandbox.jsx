@@ -259,26 +259,6 @@ export default function Sandbox({ params, searchParams }) {
 
     const maxSteps = contentItem.length;
 
-    /*
-    <a href="https://www.pexels.com" target='_blank'>
-                                    <img src="https://images.pexels.com/lib/api/pexels-white.png" />
-                                </a>
-    */
-
-    /*
-    {
-        contentItem[activeStep].image.length > 0 &&
-        <div className={classes.credit}>
-            <div className={classes.logo}>
-                <img onClick={() => handleClick(contentItem[activeStep].image)} src="https://images.pexels.com/lib/api/pexels-white.png" />
-            </div>
-            <div className={classes.photog}>
-                <a className={classes.link} href="#" target='_blank'>Photo by John Doe</a>
-            </div>
-        </div>
-    }
-    */
-    
     return (
         <div className={classes.container}>
             <div className={classes.content}>
@@ -291,12 +271,25 @@ export default function Sandbox({ params, searchParams }) {
                         flexGrow: 1 
                     }}>
                     <div className={classes.panel} style={{
-                        backgroundImage: contentItem[activeStep].image ? `url("${contentItem[activeStep].image?.src.original}")` : '',
+                        backgroundImage: contentItem[activeStep].image ? `url("${contentItem[activeStep].image?.src.large}")` : '',
+                        backgroundColor: '#999',
                         backgroundSize: 'cover',
                     }}>
-                        <h4 className={classes.title}>{contentItem[activeStep].label}</h4>
-                        <p className={classes.text}>{contentItem[activeStep].description}</p>
-                        <p className={classes.text}>Image: {contentItem[activeStep].key}</p>
+                        <div className={classes.contentPanel}>
+                            <h4 className={classes.title}>{contentItem[activeStep].label}</h4>
+                            <p className={classes.text}>{contentItem[activeStep].description}</p>
+                        </div>
+                        {
+                            contentItem[activeStep].image &&
+                            <div className={classes.credit}>
+                                <div className={classes.logo}>
+                                    <img onClick={() => handleClick(contentItem[activeStep].image)} src="https://images.pexels.com/lib/api/pexels-white.png" />
+                                </div>
+                                <div className={classes.photog}>
+                                    <a className={classes.link} href={contentItem[activeStep].image.photographer_url} target='_blank'>Photo by {contentItem[activeStep].image.photographer}</a>
+                                </div>
+                            </div>
+                        }
                     </div>
                     <MobileStepper
                         variant="text"

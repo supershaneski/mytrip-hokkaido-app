@@ -27,10 +27,12 @@
 .title {
     margin-bottom: 2rem !important;
     color: #eee;
+    mix-blend-mode: screen;
 }
 .text {
     line-height: 160%;
     color: #eee;
+    mix-blend-mode: screen;
 }
 
 .close {
@@ -58,6 +60,13 @@
 .link {
     font-size: .9rem;
     font-style: italic;
-    color: #fff9;
+    color: #fff;
     text-decoration: none;
+}
+
+.contentPanel {
+    background-color: #9996;
+    position: relative;
+    padding: 1rem;
+    border-radius: 6px;
 }

@@ -29,7 +29,7 @@ import { getSimpleId, getDateDiff, getDateTime } from '../lib/utils'
 
 import CustomTheme from '../components/customtheme'
 
-import Test from '../components/test'
+//import Test from '../components/test'
 
 import Loader from '../components/loader'
 
@@ -130,6 +130,7 @@ export default function Sandbox() {
         let test_place = place
         let test_decription = ''
 
+        
         try {
 
             const response_find = await fetch('/find/', {
@@ -172,6 +173,32 @@ export default function Sandbox() {
             setLoading(false)
             return
         }
+
+        try {
+
+            const response_location = await fetch('/location/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    location: test_place,
+                })
+            })
+
+            if(!response_location.ok) {
+                console.log('Oops, an error occurred', response_location.status)
+            }
+
+            const result_location = await response_location.json()
+
+            console.log('location', result_location)
+
+        } catch(error) {
+            console.log(error)
+        }
+
 
         const previous = []
 
