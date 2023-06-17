@@ -4,16 +4,6 @@ import React from 'react'
 
 import PropTypes from 'prop-types'
 
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import ClearIcon from '@mui/icons-material/Clear'
-import SendIcon from '@mui/icons-material/Send'
-import QuizIcon from '@mui/icons-material/Quiz'
-import ChatIcon from '@mui/icons-material/Forum'
-import DeleteIcon from '@mui/icons-material/DeleteForever'
-import IconButton from '@mui/material/IconButton'
-
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
@@ -59,10 +49,6 @@ export default function Dialog({
 
         onStatus(checked ? 1 : confirmStatus)
 
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
     }
 
     return (

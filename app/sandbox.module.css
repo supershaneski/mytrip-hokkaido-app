@@ -8,7 +8,6 @@
 
 .main {
     position: relative;
-    /*background-color: #feafba44;*/
     width: 90%;
     max-width: 600px;
     margin-top: 3rem;
@@ -27,8 +26,6 @@
 .title {
     font-size: 1.1rem;
     margin: 0;
-    /*border-bottom: 1px solid #d5d0ca;
-    padding-bottom: 8px;*/
 }
 
 .list {
@@ -48,9 +45,6 @@
     padding: 5px;
 }
 .item {
-    /*background-color: chartreuse;*/
-    /*display: flex;
-    justify-content: space-between;*/
     position: relative;
     z-index: 1;
 }
@@ -71,7 +65,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #6578b4; /*52a52e 006085*/
+    color: #6578b4;
 }
 .name span {
     text-transform: capitalize;
@@ -79,17 +73,13 @@
 }
 
 .datetime {
-    /*background-color: yellow;*/
     flex-shrink: 0;
-    /*padding-left: 6px;*/
 }
 
 .ago {
     font-size: .9rem;
-    /*font-style: italic;*/
     color: #a3a0a2;
     margin-left: 8px;
-    /*opacity: .8;*/
 }
 .date {
     font-size: .9rem;

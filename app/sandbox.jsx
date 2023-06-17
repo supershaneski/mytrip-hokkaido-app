@@ -1,47 +1,29 @@
 'use client'
 
 import React from 'react'
-
 import { createPortal } from 'react-dom'
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import ClearIcon from '@mui/icons-material/Clear'
-import SendIcon from '@mui/icons-material/Send'
-import QuizIcon from '@mui/icons-material/Quiz'
-import ChatIcon from '@mui/icons-material/Forum'
 import DeleteIcon from '@mui/icons-material/DeleteForever'
 import SearchIcon from '@mui/icons-material/Search'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import CreateIcon from '@mui/icons-material/BorderColor'
-import ResetIcon from '@mui/icons-material/RestartAlt'
 
 import { getSimpleId, getDateDiff, getDateTime } from '../lib/utils'
 
 import CustomTheme from '../components/customtheme'
-
-//import Test from '../components/test'
-
 import Loader from '../components/loader'
-
+import Dialog from '../components/dialog'
 import captions from '../assets/captions.json'
 import useCaption from '../lib/usecaption'
-
 import useDarkMode from '../lib/usedarkmode'
-
 import useDataStore from '../store/datastore'
 import useAppStore from '../store/appstore'
-
-import Dialog from '../components/dialog'
 
 import classes from './sandbox.module.css'
 
@@ -59,9 +41,8 @@ export default function Sandbox() {
     const data = useDataStore((state) => state.data)
     const addData = useDataStore((state) => state.add)
     const deleteData = useDataStore((state) => state.delete)
-    const getData = useDataStore((state) => state.getByName)
+    //const getData = useDataStore((state) => state.getByName)
 
-    const imageData = useDataStore((state) => state.images)
     const addImageData = useDataStore((state) => state.addImage)
     const getImageData = useDataStore((state) => state.getImage)
 
@@ -76,9 +57,6 @@ export default function Sandbox() {
     const [openDialog, setOpenDialog] = React.useState(false)
     const [paramId, setParamId] = React.useState('')
     const [selName, setSelName] = React.useState('')
-
-    //const [anchorEl, setAnchorEl] = React.useState(null)
-    //const openMenu = Boolean(anchorEl)
 
     React.useEffect(() => {
 
@@ -103,26 +81,6 @@ export default function Sandbox() {
 
         handleTrip(query)
         
-        //console.log(`Search: ${search}`)
-
-        /*
-        const cached = getData(search)
-
-        if(!cached) {
-
-            console.log('Search...')
-
-            handleTrip(search)
-
-        } else {
-
-            console.log('Found cached', cached.id)
-            
-            router.push(`/trip/${cached.id}`)
-
-        }
-        */
-        
     }
 
     const handleTrip = async (place) => {
@@ -130,7 +88,6 @@ export default function Sandbox() {
         let test_place = place
         let test_decription = ''
 
-        
         try {
 
             const response_find = await fetch('/find/', {
@@ -150,8 +107,6 @@ export default function Sandbox() {
 
             const result_find = await response_find.json()
 
-            console.log(result_find)
-
             if(result_find.data.content === null) {
 
                 const find_args = JSON.parse(result_find.data.function_call.arguments)
@@ -165,11 +120,7 @@ export default function Sandbox() {
             console.log('find', error)
         }
 
-        console.log(`place`, test_place)
-        console.log(`desc`, test_decription)
-
         if(test_place.length === 0) {
-            console.log(`NO-PLACE-ERROR`)
             setLoading(false)
             return
         }
@@ -193,12 +144,16 @@ export default function Sandbox() {
 
             const result_location = await response_location.json()
 
-            console.log('location', result_location)
+            test_place = result_location.text.indexOf('NOT-HOKKAIDO') >= 0 ? '' : [test_place, result_location.text].join(', ')
 
         } catch(error) {
             console.log(error)
         }
 
+        if(test_place.length === 0) {
+            setLoading(false)
+            return
+        }
 
         const previous = []
 
@@ -225,7 +180,6 @@ export default function Sandbox() {
             `title: closing message title\n` +
             `content: closing message text\n`
 
-        //const inquiry = `Write Day Trip Plan around ${place}`
         const inquiry = `Write a Trip Plan for ${test_decription} in ${test_place}`
 
         console.log(inquiry)
@@ -251,28 +205,9 @@ export default function Sandbox() {
 
             const result = await response.json()
 
-            //console.log(result)
-
             const trip_data = procResult(result.text)
 
-            console.log(trip_data)
-
             const image_list = trip_data.data.filter(a => a.key.length > 0).map(a => a.key).filter(a => !getImageData(a))
-
-            /*if(image_list.length > 0) {
-                const image_data = image_list.map((a, i) => {
-                    const b = a.toLowerCase()
-                    return {
-                        id: getSimpleId(),
-                        name: b,
-                        key: b,
-                        url: `/images/image${i}.jpg`
-                    }
-                })
-                addImageData(image_data)
-            }*/
-
-            console.log("image list", image_list)
 
             if(image_list.length > 0) {
 
@@ -304,11 +239,8 @@ export default function Sandbox() {
                 }
 
             }
-            
-            //console.log("images")
-            //console.log(image_list)
 
-            const newId = getSimpleId() //Date.now()
+            const newId = getSimpleId()
 
             const newData = {
                 ...trip_data,
@@ -318,17 +250,10 @@ export default function Sandbox() {
                 datetime: (new Date()).toISOString(),
             }
 
-            console.log(newData)
-
             addData(newData)
 
-            //setDataItems((prev) => [...prev, ...[newData]])
-
-            //setQuery('')
             router.push(`/trip/${newId}`)
-
-            //setLoading(false)
-
+            
         } catch(error) {
             
             console.log(error)
@@ -411,12 +336,6 @@ export default function Sandbox() {
 
     const handleDelete = (id, name) => {
         
-        //console.log('delete', id)
-        
-        //deleteData(id)
-
-        //setDataItems((prev) => prev.slice(0).filter((item) => item.id !== id))
-
         setParamId(id)
         setSelName(name)
 
@@ -426,8 +345,6 @@ export default function Sandbox() {
     
     const handleConfirmDelete = (id) => {
         
-        //console.log("delete", id)
-
         deleteData(id)
 
         setDataItems((prev) => prev.slice(0).filter((item) => item.id !== id))
@@ -456,8 +373,6 @@ export default function Sandbox() {
         return 0
     })
 
-    //console.log('data', dataFiltered, dataItems)
-
     return (
         <div className={classes.container}>
             <div className={classes.main}>
@@ -468,15 +383,11 @@ export default function Sandbox() {
                         onSubmit={handleSearch}
                         noValidate>
                             <TextField 
-                            placeholder={setCaption('placeholder-search')} //'Where do you want to go?'
+                            placeholder={setCaption('placeholder-search')}
                             disabled={isLoading}
                             fullWidth
-                            //multiline
-                            //maxRows={6}
                             inputRef={searchRef}
                             value={query}
-                            //onFocus={handleFocus}
-                            //onBlur={handleBlur}
                             onChange={(e) => handleQuery(e.target.value)}
                             InputProps={{
                                 endAdornment: (

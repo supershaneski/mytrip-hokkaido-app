@@ -71,48 +71,6 @@ export async function POST(request) {
 
     }
 
-    /*
-    const image_list = [
-        ["sapporo clock tower", "odori park", "", "maruyama zoo", "", "jr tower sapporo", "ramen alley"],
-        ["mt. maruyama", "beer factory", "maruyama park", "sapporo factory", "susukino", "snow festival", "ramen alley"],
-        ["sapporo tv tower", "hokkaido shrine", "lilac festival", "", "susukino", "jr tower sapporo", "beer festival"],
-        ["", "lilac festival", "", "maruyama zoo", "odori park", "shinsapporo", "ramen alley"],
-    ]
-    const chance = Math.round(image_list.length * Math.random())
-
-    const trip_name = inquiry.length > 0 ? `My Trip Hokkaido: ${inquiry} ${Date.now()}` : `My Trip Hokkaido ${Date.now()}`
-
-    text = `itinerary-name: ${trip_name}\n` +
-        `[welcome-message]\n` +
-        `title: welcome message title\n` +
-        `content: welcome message text\n` +
-        `image: ${image_list[chance][0]}\n` +
-        `[itinerary]\n` +
-        `title: itinerary title 1\n` +
-        `content: itinerary message text\n` +
-        `image: ${image_list[chance][1]}\n` +
-        `[itinerary]\n` +
-        `title: itinerary title 2\n` +
-        `content: itinerary message text\n` +
-        `image: ${image_list[chance][2]}\n` +
-        `[itinerary]\n` +
-        `title: itinerary title 3\n` +
-        `content: itinerary message text\n` +
-        `image: ${image_list[chance][3]}\n` +
-        `[itinerary]\n` +
-        `title: itinerary title 4\n` +
-        `content: itinerary message text\n` +
-        `image: ${image_list[chance][4]}\n` +
-        `[itinerary]\n` +
-        `title: itinerary title 5\n` +
-        `content: itinerary message text\n` +
-        `image: ${image_list[chance][5]}\n` +
-        `[closing-message]\n` +
-        `title: closing message title\n` +
-        `content: closing message text\n` +
-        `image: ${image_list[chance][6]}`
-    */
-
     return new Response(JSON.stringify({
         text,
     }), {

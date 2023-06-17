@@ -1,4 +1,4 @@
-import { textCompletion, chatCompletion } from '../../service/openai'
+import { textCompletion } from '../../service/openai'
 
 export async function POST(request) {
 
@@ -21,7 +21,7 @@ export async function POST(request) {
             `If the place is not in Hokkaido, reply in Result with NOT-HOKKAIDO.\n` +
             `If the place is vague and generic name, reply in Result with such place located in Hokkaido.\n\n` +
             `Place:\n` +
-            `${location}\n`
+            `${location}\n` +
             `Result:`
 
         text = await textCompletion({

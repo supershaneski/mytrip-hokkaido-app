@@ -42,22 +42,6 @@ export async function POST(request) {
             ]
         })
 
-        /*
-        response = {
-            content: null,
-            function_call: {
-                role: 'assistant',
-                content: null,
-                function_call: {
-                name: 'trip_planner',
-                arguments: '{\n  "location": "sapporo", "description": "day trip"\n}'
-                }
-            }
-        }
-        */
-
-        console.log("received", response)
-
     } catch(error) {
 
         console.log(error)
