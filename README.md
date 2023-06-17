@@ -7,14 +7,13 @@ The application is built using Next.js 13, powered by the OpenAI API, and suppor
 
 # Application
 
-Type the location and activity you want to do anywhere in Hokkaido, the app will generate the itinerary.
+Type the location and activity you want to do anywhere in Hokkaido and the app will generate the itinerary. Similar previous plans will also be shown as suggestions.
 
 ![Search](./docs/screenshot1.png "Search")
 
-Sample itinerary
+Sample itinerary panel
 
 ![Sample itinerary](./docs/screenshot2.png "Sample itinerary")
-
 
 # Code
 
@@ -23,7 +22,6 @@ The app uses several OpenAI APIs (Text Completion and Chat APIs).
 * Extracting location and activity from user inquiry
 * Checking whether the location is within Hokkaido
 * Generating the itinerary based on submitted inquiry
-
 
 # Images
 
@@ -61,10 +59,11 @@ cd myproject
 npm install
 ```
 
-Copy `.env.example` and rename it to `.env` then edit the `OPENAI_API_KEY` and use your own `OpenAI API key`.
+Copy `.env.example` and rename it to `.env` then edit the `OPENAI_API_KEY` and `PEXELS_API_KEY` use your own API keys. 
 
 ```javascript
 OPENAI_API_KEY=YOUR-OPENAI-API-KEY
+PEXELS_API_KEY=YOUR-PEXELS-API-KEY
 ```
 
 Then run the app
