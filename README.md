@@ -1,11 +1,9 @@
 mytrip-hokkaido-app
 ======
 
-This sample app aims to be your personalized travel itinerary companion exclusively for Hokkaido, Japan. 
-Plan your trip by simply inputting your desired destinations and activities within Hokkaido and the app will craft an itinerary tailored to your preferences.
+A proof-of-concept Travel Planning app that allows users to create itinerary based on their interests using [OpenAI APIs](https://platform.openai.com/docs/introduction/overview).
 
 The application is built using Next.js 13, powered by the OpenAI API, and supports Japanese language settings (日本語対応).
-
 
 # Application
 
