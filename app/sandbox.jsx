@@ -416,7 +416,9 @@ export default function Sandbox() {
                 { 
                     dataFiltered.length > 0 &&
                     <div className={classes.recommended}>
-                        <h4 className={classes.title}>{ `Here ${dataFiltered.length > 1 ? `are ${dataFiltered.length} suggestions` : `is a suggestion`} for you...` }</h4>
+                        <h4 className={classes.title}>
+                            { dataFiltered.length > 1 ? `${setCaption('suggestion1')} ${dataFiltered.length} ${setCaption('suggestion2')}` : setCaption('suggestion3') }
+                        </h4>
                         <ul className={classes.list}>
                             {
                                 dataFiltered.map((item) => {

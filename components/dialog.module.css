@@ -34,10 +34,9 @@
     position: relative;
     padding: 2rem 1rem 1rem 1rem;
     text-align: center;
+    font-size: 1rem;
 }
 .caption span {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: .9rem;
     color: #2c3e50;
 }
 

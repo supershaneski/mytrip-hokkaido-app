@@ -19,8 +19,12 @@ import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 
 import useDarkMode from '../../../lib/usedarkmode'
-import { getSimpleId } from '../../../lib/utils'
+//import { getSimpleId } from '../../../lib/utils'
 import useDataStore from '../../../store/datastore'
+
+import captions from '../../../assets/captions.json'
+import useCaption from '../../../lib/usecaption'
+
 import Loader from '../../../components/loader'
 import CustomTheme from '../../../components/customtheme'
 
@@ -33,6 +37,9 @@ export default function Sandbox({ params }) {
     const router = useRouter()
 
     const theme = useTheme()
+
+    const setCaption = useCaption(captions)
+
     const [activeStep, setActiveStep] = React.useState(0)
     
     const getData = useDataStore((state) => state.get)
@@ -157,7 +164,7 @@ export default function Sandbox({ params }) {
                                     </a>
                                 </div>
                                 <div className={classes.photog}>
-                                    <a className={classes.link} href={contentItem[activeStep].image.photographer_url} target='_blank'>Photo by {contentItem[activeStep].image.photographer}</a>
+                                    <a className={classes.link} href={contentItem[activeStep].image.photographer_url} target='_blank'>{`${setCaption('photo-by')} ${contentItem[activeStep].image.photographer}`}</a>
                                 </div>
                             </div>
                         }
@@ -173,7 +180,7 @@ export default function Sandbox({ params }) {
                             onClick={handleNext}
                             disabled={activeStep === maxSteps - 1}
                         >
-                            Next
+                            {setCaption('next')}
                             {theme.direction === 'rtl' ? (
                             <KeyboardArrowLeft />
                             ) : (
@@ -188,7 +195,7 @@ export default function Sandbox({ params }) {
                             ) : (
                             <KeyboardArrowLeft />
                             )}
-                            Back
+                            {setCaption('back')}
                         </Button>
                         }
                     />

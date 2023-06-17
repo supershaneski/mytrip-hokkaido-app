@@ -27,11 +27,7 @@ export default function Dialog({
 }) {
     
     const setCaption = useCaption(captions)
-
-    const inputRef = React.useRef(null)
-
-    const [inputText, setInputText] = React.useState(caption)
-
+    
     const [confirmStatus, setConfirmStatus] = React.useState(0)
     const [isChecked, setChecked] = React.useState(false)
 
@@ -74,7 +70,7 @@ export default function Dialog({
                     </div>
                 }
                 <div className={classes.caption}>
-                    Are you sure you want to delete<br /><span className={classes.name}>{caption}</span>?
+                    { setCaption('delete-text') }<br /><span className={classes.name}>{caption}</span>?
                 </div>
                 {
                     confirmStatus === 0 &&
@@ -91,7 +87,7 @@ export default function Dialog({
                 <div className={classes.action}>
                     <CustomTheme>
                         <Button 
-                        onClick={() => onConfirm(param, inputText)} 
+                        onClick={() => onConfirm(param)} 
                         variant="outlined" 
                         sx={{mr: 1, width: 100, }}>OK</Button>
                         <Button 
