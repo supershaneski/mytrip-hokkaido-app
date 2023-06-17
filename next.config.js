@@ -8,7 +8,7 @@ const nextConfig = {
       return config
     },
     env: {
-        siteTitle: 'Genesis',
+        siteTitle: 'My Trip Hokkaido',
     },
     trailingSlash: true,
     experimental: {

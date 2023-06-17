@@ -89,11 +89,11 @@ export default function Dialog({
                         <Button 
                         onClick={() => onConfirm(param)} 
                         variant="outlined" 
-                        sx={{mr: 1, width: 100, }}>OK</Button>
+                        sx={{mr: 1, width: 100, }}>{setCaption('yes')}</Button>
                         <Button 
                         onClick={onClose} 
                         variant="outlined" 
-                        sx={{width: 100, }}>{setCaption('close')}</Button>
+                        sx={{width: 100, }}>{setCaption('no')}</Button>
                     </CustomTheme>
                 </div>
             </div>

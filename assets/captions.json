@@ -13,5 +13,5 @@
     "dialog-confirm": ["Do not ask again", "二度と聞かない"],
     "yes": ["Yes", "はい"],
     "no": ["No", "いいえ"],
-    "close": ["Close", "閉じる"]
+    "close": ["Cancel", "キャンセル"]
 }
