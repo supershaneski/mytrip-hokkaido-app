@@ -15,6 +15,10 @@ Sample itinerary panel
 
 ![Sample itinerary](./docs/screenshot2.png "Sample itinerary")
 
+Closing panel
+
+![Closing panel](./docs/screenshot3.png "Closing panel")
+
 # OpenAI APIs
 
 The app uses several OpenAI APIs (Text Completion and Chat APIs).
