@@ -15,7 +15,7 @@ Sample itinerary panel
 
 ![Sample itinerary](./docs/screenshot2.png "Sample itinerary")
 
-# Code
+# OpenAI APIs
 
 The app uses several OpenAI APIs (Text Completion and Chat APIs).
 
@@ -45,6 +45,14 @@ client.photos.search({ query, per_page: 3 }).then((photos) => {
     console.log(photos)
 })
 ```
+
+# Thinking Out Loud
+
+While we have shown that it is possible to generate itinerary on the fly using AI, I think solely relying on AI is not the way forward. 
+
+It is still better to prepare such itineraries beforehand and use `Embedding API` to generate vector data that will be used for later. Another implementation is using external backend or function.
+
+Since we cannot predict what the users will want, there will be cases where the database has no entry for such location/activity. This is where the AI can help to fill the gap.
 
 
 # Setup
