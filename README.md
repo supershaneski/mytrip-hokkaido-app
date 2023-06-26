@@ -27,6 +27,99 @@ The app uses several OpenAI APIs (Text Completion and Chat APIs).
 * Checking whether the location is within Hokkaido
 * Generating the itinerary based on submitted inquiry
 
+## Extracting Location and Activity
+
+Using [function call](https://openai.com/blog/function-calling-and-other-api-updates), we define the function,
+
+```javascript
+{
+    name: "trip_planner",
+    description: "Suggest itinerary plan given a trip description and location.",
+    parameters: {
+        type: "object",
+        properties: {
+            location: {
+                type: "string",
+                description: "The location of the trip, e.g. Hakodate, Sapporo"
+            },
+            description: {
+                type: "string",
+                description: "The description of the trip, e.g. day trip, night trip, cherry blossom viewing, hot spring"
+            }
+        },
+        required: ["location"]
+    }
+}
+```
+
+The sample response is
+
+```javascript
+{
+  role: 'assistant',
+  content: null,
+  function_call: {
+    name: 'trip_planner',
+    arguments: '{\n' +
+      '  "location": "Sapporo",\n' +
+      '  "description": "day trip",\n' +
+      '}'
+  }
+}
+```
+
+## Checking Location
+
+I will be using Text Completions API, using the prompt,
+
+```javascript
+const prompt = `Check if the given Place is located within Hokkaido, Japan.\n` +
+    `If the place is in Hokkaido, reply in Result with the given place.\n` +
+    `If the place is not in Hokkaido, reply in Result with NOT-HOKKAIDO.\n` +
+    `If the place is vague and generic name, reply in Result with such place located in Hokkaido.\n\n` +
+    `Place:\n` +
+    `${location}\n` +
+    `Result:`
+```
+
+## Generating Itinerary
+
+I will be using Chat Completions API, with the following prompts,
+
+```javascript
+const system = `You are a helpful travel planner specializing in Hokkaido, Japan.\n` +
+    `You will reply in the following format:\n` +
+    `itinerary-name: Trip Name\n` +
+    `[welcome-message]\n` +
+    `title: welcome message title\n` +
+    `content: welcome message text\n` +
+    `image: welcome image keyword\n` +
+    `[itinerary]\n` +
+    `title: itinerary title\n` +
+    `content: itinerary message text\n` +
+    `image: itinerary image keyword\n` +
+    `[itinerary]\n` +
+    `title: itinerary title\n` +
+    `content: itinerary message text\n` +
+    `image: itinerary image keyword\n` +
+    `[itinerary]\n` +
+    `title: itinerary title\n` +
+    `content: itinerary message text\n` +
+    `image: itinerary image keyword\n` +
+    `[closing-message]\n` +
+    `title: closing message title\n` +
+    `content: closing message text\n`
+
+const inquiry = `Write a Trip Plan for ${test_decription} in ${test_place}`
+
+
+let messages = []
+messages.push({ role: 'system', content: system })
+messages.push({ role: 'user', content: inquiry })
+...
+```
+
+
 # Images
 
 To generate the images from the itinerary, I will be using another external API.
