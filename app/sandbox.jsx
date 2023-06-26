@@ -58,6 +58,8 @@ export default function Sandbox() {
     const [paramId, setParamId] = React.useState('')
     const [selName, setSelName] = React.useState('')
 
+    const [errorMessage, setErrorMessage] = React.useState('')
+
     React.useEffect(() => {
 
         document.title = process.env.siteTitle
@@ -121,6 +123,9 @@ export default function Sandbox() {
         }
 
         if(test_place.length === 0) {
+
+            setErrorMessage('Please specify the place you want to visit.')
+
             setLoading(false)
             return
         }
@@ -150,7 +155,10 @@ export default function Sandbox() {
             console.log(error)
         }
 
-        if(test_place.length === 0) {
+        if(test_place.length === 0) { // show error
+
+            setErrorMessage('You need to specify place found within Hokkaido.')
+
             setLoading(false)
             return
         }
@@ -258,6 +266,8 @@ export default function Sandbox() {
             
             console.log(error)
 
+            setErrorMessage('Unexpected error. Please try again.')
+
             setLoading(false)
 
         }
@@ -361,6 +371,7 @@ export default function Sandbox() {
     }
 
     const handleQuery = (s) => {
+        setErrorMessage('')
         setQuery(s)
         setSearchKey(s)
     }
@@ -383,6 +394,8 @@ export default function Sandbox() {
                         onSubmit={handleSearch}
                         noValidate>
                             <TextField 
+                            error={errorMessage.length > 0}
+                            helperText={errorMessage}
                             placeholder={setCaption('placeholder-search')}
                             disabled={isLoading}
                             fullWidth
