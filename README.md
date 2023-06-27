@@ -45,12 +45,19 @@ Using [function call](https://openai.com/blog/function-calling-and-other-api-upd
             description: {
                 type: "string",
                 description: "The description of the trip, e.g. day trip, night trip, cherry blossom viewing, hot spring"
+            },
+            isHokkaido: {
+                type: "boolean",
+                description: "Set true if the location is located within Hokkaido, false if not located within Hokkaido."
             }
         },
-        required: ["location"]
+        required: ["location", "isHokkaido"]
     }
 }
 ```
+
+I added the location validation if the extracted location is found in Hokkaido by adding another parameter in the function thus reducing out API call.
+
 
 The sample response is
 
@@ -63,23 +70,10 @@ The sample response is
     arguments: '{\n' +
       '  "location": "Sapporo",\n' +
       '  "description": "day trip",\n' +
+      '  "isHokkaido": true,\n' +
       '}'
   }
 }
-```
-
-## Checking Location
-
-I will be using Text Completions API, using the prompt,
-
-```javascript
-const prompt = `Check if the given Place is located within Hokkaido, Japan.\n` +
-    `If the place is in Hokkaido, reply in Result with the given place.\n` +
-    `If the place is not in Hokkaido, reply in Result with NOT-HOKKAIDO.\n` +
-    `If the place is vague and generic name, reply in Result with such place located in Hokkaido.\n\n` +
-    `Place:\n` +
-    `${location}\n` +
-    `Result:`
 ```
 
 ## Generating Itinerary
@@ -98,17 +92,21 @@ const system = `You are a helpful travel planner specializing in Hokkaido, Japan
     `title: itinerary title\n` +
     `content: itinerary message text\n` +
     `image: itinerary image keyword\n` +
+    `places: place1, place2\n` +
     `[itinerary]\n` +
     `title: itinerary title\n` +
     `content: itinerary message text\n` +
     `image: itinerary image keyword\n` +
+    `places: place1, place2, place3\n` +
     `[itinerary]\n` +
     `title: itinerary title\n` +
     `content: itinerary message text\n` +
     `image: itinerary image keyword\n` +
+    `places: place1\n` +
     `[closing-message]\n` +
     `title: closing message title\n` +
-    `content: closing message text\n`
+    `content: closing message text\n` +
+    `places: place1, place2`
 
 const inquiry = `Write a Trip Plan for ${test_decription} in ${test_place}`
 
@@ -118,6 +116,8 @@ messages.push({ role: 'system', content: system })
 messages.push({ role: 'user', content: inquiry })
 ...
 ```
+
+By preparing the `user inquiry` in some fixed format, we are reducing the chance of unexpected prompt.
 
 
 # Images
