@@ -109,8 +109,6 @@ export default function Sandbox() {
 
             const result_find = await response_find.json()
 
-            console.log('find', result_find)
-
             if(result_find.data.content === null) {
 
                 const find_args = JSON.parse(result_find.data.function_call.arguments)
@@ -119,8 +117,6 @@ export default function Sandbox() {
                 test_decription = find_args.hasOwnProperty('description') ? find_args.description : 'day trip'
 
                 const isHokkaido = find_args.hasOwnProperty('isHokkaido') ? find_args.isHokkaido : true
-
-                console.log('isHokkaido', isHokkaido, typeof isHokkaido)
 
                 if(!isHokkaido) {
                     
@@ -153,44 +149,6 @@ export default function Sandbox() {
             setLoading(false)
             return
         }
-
-        /*
-        try {
-
-            const response_location = await fetch('/location/', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    location: test_place,
-                })
-            })
-
-            if(!response_location.ok) {
-                console.log('Oops, an error occurred', response_location.status)
-            }
-
-            const result_location = await response_location.json()
-
-            test_place = result_location.text.indexOf('NOT-HOKKAIDO') >= 0 ? '' : [test_place, result_location.text].join(', ')
-
-        } catch(error) {
-            console.log(error)
-        }
-
-        // test
-        test_place = ''
-
-        if(test_place.length === 0) { // show error
-
-            setErrorMessage('You need to specify place found within Hokkaido.')
-
-            setLoading(false)
-            return
-        }
-        */
         
         const previous = []
 

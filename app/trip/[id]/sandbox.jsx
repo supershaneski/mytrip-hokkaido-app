@@ -135,6 +135,11 @@ export default function Sandbox({ params }) {
         
     }
 
+    const getMapLink = (str) => {
+        const encodedStr = encodeURIComponent(str)
+        return `https://www.google.com/maps/search/?api=1&query=${encodedStr}`
+    }
+
     const maxSteps = contentItem.length;
 
     return (
@@ -164,6 +169,21 @@ export default function Sandbox({ params }) {
                                     contentItem[activeStep].places.split(',').map((place, i) => {
                                         return (
                                             <li key={i} className={classes.listItem}>{ place }</li>
+                                        )
+                                    })
+                                    }
+                                    </ul>
+                                </p>
+                            }
+                            {
+                                contentItem[activeStep].description.charAt(contentItem[activeStep].description.length - 1) !== ':' && contentItem[activeStep].hasOwnProperty('places') && contentItem[activeStep].places.length > 0 && 
+                                <p className={classes.places}>
+                                    <span>{setCaption('explore-more')}</span>
+                                    <ul className={classes.list2}>
+                                    {
+                                    contentItem[activeStep].places.split(',').map((place, i) => {
+                                        return (
+                                            <li key={i} className={classes.listItem2}><a className={classes.link2} href={getMapLink(place)} target='_blank'>{ place }</a></li>
                                         )
                                     })
                                     }
