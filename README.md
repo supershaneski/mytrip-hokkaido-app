@@ -56,7 +56,7 @@ Using [function call](https://openai.com/blog/function-calling-and-other-api-upd
 }
 ```
 
-I added the location validation if the extracted location is found in Hokkaido by adding another parameter in the function thus reducing out API call.
+I added the location validation if the extracted location is found in Hokkaido by adding another parameter in the function thus reducing the API calls. Before I was using another Text Completion call to do this task.
 
 
 The sample response is
@@ -78,7 +78,7 @@ The sample response is
 
 ## Generating Itinerary
 
-I will be using Chat Completions API, with the following prompts,
+To generate itineraries, I will be using Chat Completions API, with the following prompts,
 
 ```javascript
 const system = `You are a helpful travel planner specializing in Hokkaido, Japan.\n` +
@@ -142,6 +142,7 @@ client.photos.search({ query, per_page: 3 }).then((photos) => {
     console.log(photos)
 })
 ```
+
 
 # Thinking Out Loud
 
