@@ -76,6 +76,8 @@ export default function Sandbox({ params }) {
             }
         })
 
+        console.log(itinerary_items)
+
         setTrimpName(title)
         setContentItem(itinerary_items)
         setLoading(false)
@@ -154,6 +156,20 @@ export default function Sandbox({ params }) {
                         <div className={classes.contentPanel}>
                             <h4 className={classes.title}>{contentItem[activeStep].label}</h4>
                             <p className={classes.text}>{contentItem[activeStep].description}</p>
+                            {
+                                contentItem[activeStep].description.charAt(contentItem[activeStep].description.length - 1) === ':' && contentItem[activeStep].hasOwnProperty('places') &&
+                                <p className={classes.places}>
+                                    <ul className={classes.list}>
+                                    {
+                                    contentItem[activeStep].places.split(',').map((place, i) => {
+                                        return (
+                                            <li key={i} className={classes.listItem}>{ place }</li>
+                                        )
+                                    })
+                                    }
+                                    </ul>
+                                </p>
+                            }
                         </div>
                         {
                             contentItem[activeStep].image &&

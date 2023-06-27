@@ -109,27 +109,52 @@ export default function Sandbox() {
 
             const result_find = await response_find.json()
 
+            console.log('find', result_find)
+
             if(result_find.data.content === null) {
 
                 const find_args = JSON.parse(result_find.data.function_call.arguments)
 
                 test_place = find_args.location ? find_args.location : ''
-                test_decription = find_args.description ? find_args?.description : 'day trip'
+                test_decription = find_args.hasOwnProperty('description') ? find_args.description : 'day trip'
+
+                const isHokkaido = find_args.hasOwnProperty('isHokkaido') ? find_args.isHokkaido : true
+
+                console.log('isHokkaido', isHokkaido, typeof isHokkaido)
+
+                if(!isHokkaido) {
+                    
+                    //setErrorMessage('Please specify the specific place you want to visit within Hokkaido.')
+                    setErrorMessage(setCaption('error-not-hokkaido'))
+
+                    setLoading(false)
+                    return
+
+                }
 
             }
 
         } catch(error) {
+
             console.log('find', error)
+
+            // we are just assuming here that the error is a result 
+            // of not finding location in prompt.
+
+            test_place = '' 
+            
         }
 
         if(test_place.length === 0) {
 
-            setErrorMessage('Please specify the place you want to visit.')
+            //setErrorMessage('Please provide the name of the place you wish to visit.')
+            setErrorMessage(setCaption('error-missing-location'))
 
             setLoading(false)
             return
         }
 
+        /*
         try {
 
             const response_location = await fetch('/location/', {
@@ -155,6 +180,9 @@ export default function Sandbox() {
             console.log(error)
         }
 
+        // test
+        test_place = ''
+
         if(test_place.length === 0) { // show error
 
             setErrorMessage('You need to specify place found within Hokkaido.')
@@ -162,7 +190,8 @@ export default function Sandbox() {
             setLoading(false)
             return
         }
-
+        */
+        
         const previous = []
 
         const system = `You are a helpful travel planner specializing in Hokkaido, Japan.\n` +
@@ -176,17 +205,22 @@ export default function Sandbox() {
             `title: itinerary title\n` +
             `content: itinerary message text\n` +
             `image: itinerary image keyword\n` +
+            `places: place1, place2\n` +
             `[itinerary]\n` +
             `title: itinerary title\n` +
             `content: itinerary message text\n` +
             `image: itinerary image keyword\n` +
+            `places: place1\n` +
             `[itinerary]\n` +
             `title: itinerary title\n` +
             `content: itinerary message text\n` +
             `image: itinerary image keyword\n` +
+            `places: place1, place2, place3\n` +
             `[closing-message]\n` +
             `title: closing message title\n` +
-            `content: closing message text\n`
+            `content: closing message text\n` +
+            `image: closing image keyword\n` +
+            `places: place1, place2`
 
         const inquiry = `Write a Trip Plan for ${test_decription} in ${test_place}`
 
@@ -212,6 +246,8 @@ export default function Sandbox() {
             }
 
             const result = await response.json()
+
+            //console.log(result)
 
             const trip_data = procResult(result.text)
 
@@ -266,7 +302,8 @@ export default function Sandbox() {
             
             console.log(error)
 
-            setErrorMessage('Unexpected error. Please try again.')
+            //setErrorMessage('Sorry, an unexpected error has occurred. Please try again later.')
+            setErrorMessage(setCaption('error-unexpecte'))
 
             setLoading(false)
 
@@ -298,6 +335,8 @@ export default function Sandbox() {
 
             let str = token_str[i].trim()
 
+            //console.log(i, str)
+
             if(str.length === 0) continue
 
             if(str.indexOf('itinerary-name:') >= 0) {
@@ -315,6 +354,7 @@ export default function Sandbox() {
                     type: getContentType(str),
                     key: '',
                     image: '',
+                    places: '',
                 }
 
             } else if(str.indexOf('title:') >= 0) {
@@ -328,6 +368,12 @@ export default function Sandbox() {
                 str = str.substr(7).trim()
 
                 content[index].key = str
+
+            } else if(str.indexOf('places:') >= 0) {
+
+                str = str.substr(7).trim()
+
+                content[index].places = str
 
             } else {
 

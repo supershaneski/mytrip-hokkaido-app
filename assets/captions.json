@@ -10,6 +10,10 @@
     "next": ["next", "次"],
     "photo-by": ["photo by", "写真提供:"],
 
+    "error-missing-location": ["Please provide the name of the place you wish to visit.", "訪れたい場所の名前を教えてください。"],
+    "error-not-hokkaido": ["Please choose a specific place to visit in Hokkaido.", "北海道内で訪れたい具体的な場所を指定してください。"],
+    "error-unexpected": ["Sorry, an unexpected error has occurred. Please try again later.", "申し訳ありませんが、予期しないエラーが発生しました。後でもう一度お試しください。"],
+
     "dialog-confirm": ["Do not ask again", "二度と聞かない"],
     "yes": ["Yes", "はい"],
     "no": ["No", "いいえ"],

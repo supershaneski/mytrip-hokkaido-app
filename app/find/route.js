@@ -34,13 +34,19 @@ export async function POST(request) {
                             description: {
                                 type: "string",
                                 description: "The description of the trip, e.g. day trip, night trip, cherry blossom viewing, hot spring"
+                            },
+                            isHokkaido: {
+                                type: "boolean",
+                                description: "Set true if the location is located within Hokkaido, false if not located within Hokkaido."
                             }
                         },
-                        required: ["location"]
+                        required: ["location", "isHokkaido"]
                     }
                 }
             ]
         })
+
+        console.log(response)
 
     } catch(error) {
 

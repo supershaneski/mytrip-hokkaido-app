@@ -35,6 +35,13 @@
     mix-blend-mode: screen;
 }
 
+.places {
+    line-height: 160%;
+    color: #eee;
+    mix-blend-mode: screen;
+    margin-top: 1rem !important;
+}
+
 .close {
     position: absolute;
     right: 0;
