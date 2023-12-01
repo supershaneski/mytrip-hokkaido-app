@@ -13,16 +13,6 @@ export async function POST(request) {
     const { inquiry, previous } = await request.json()
     
     if (!inquiry || !Array.isArray(previous)) {
-        return new Response('Bad request', {
-            status: 400,
-        })
-    }
-
-    const flag = true
-
-    if(flag) {
-
-        await wait(500)
 
         return new Response('Bad request', {
             status: 400,

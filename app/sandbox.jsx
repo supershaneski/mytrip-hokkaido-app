@@ -85,15 +85,11 @@ export default function Sandbox() {
         let flag_backdrop = false
         if(backdrop) {
 
-            console.log('backdrop', backdrop)
-
             if(backdrop.key === process.env.appLocation) {
                 flag_backdrop = true
                 const chance = Math.floor(backdrop.image.length * Math.random())
                 setBackgroundImage(backdrop.image[chance].src.large)
             }
-
-            //setLoading(true) //test
 
         }
 
@@ -127,8 +123,6 @@ export default function Sandbox() {
             })
 
             const ret_images = await response_images.json()
-
-            console.log('images', ret_images)
 
             if(ret_images.data[0].data.photos.length > 0) {
                 const chance = Math.floor(ret_images.data[0].data.photos.length * Math.random())
