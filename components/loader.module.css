@@ -1,0 +1,47 @@
+.main {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+.loader {
+    border-color: #fff3;
+    border-style: solid;
+    border-width: 5px;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 100px;
+    animation: rotate 3s linear infinite;
+    animation-delay: -3s;
+    /*box-sizing: border-box;*/
+}
+.loader2 {
+    border-color: #fff3;
+    border-style: solid;
+    border-width: 5px;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 100px;
+    animation: rotate 3s linear infinite;
+    animation-delay: -1.5s;
+    /*box-sizing: border-box;*/
+}
+.loaderIcon {
+    position: absolute;
+    transform: rotate(45deg);
+}
+.icon {
+    color: #00ff95;
+}
+.icon2 {
+    color: #ffee00;
+}
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

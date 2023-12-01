@@ -69,6 +69,7 @@
     font-style: italic;
     color: #fff;
     text-decoration: none;
+    mix-blend-mode: screen;
 }
 
 .contentPanel {
@@ -89,4 +90,9 @@
 
 .link2 {
     color: #fff;
+}
+
+.closeIcon {
+    color: #fff;
+    mix-blend-mode: overlay;
 }

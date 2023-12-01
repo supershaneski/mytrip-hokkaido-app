@@ -6,6 +6,8 @@ import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
@@ -19,13 +21,17 @@ import { getSimpleId, getDateDiff, getDateTime } from '../lib/utils'
 import CustomTheme from '../components/customtheme'
 import Loader from '../components/loader'
 import Dialog from '../components/dialog'
-import captions from '../assets/captions.json'
-import useCaption from '../lib/usecaption'
+//import captions from '../assets/captions.json'
+//import useCaption from '../lib/usecaption'
 import useDarkMode from '../lib/usedarkmode'
 import useDataStore from '../store/datastore'
 import useAppStore from '../store/appstore'
 
 import classes from './sandbox.module.css'
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+})
 
 export default function Sandbox() {
 
@@ -33,15 +39,17 @@ export default function Sandbox() {
 
     const router = useRouter()
 
-    const setCaption = useCaption(captions)
+    //const setCaption = useCaption(captions)
 
     const defSearchKey = useAppStore((state) => state.search)
     const setSearchKey = useAppStore((state) => state.setSearch)
 
+    const backdrop = useDataStore((state) => state.backdrop)
+    const setBackdrop = useDataStore((state) => state.setBackdrop)
+
     const data = useDataStore((state) => state.data)
     const addData = useDataStore((state) => state.add)
     const deleteData = useDataStore((state) => state.delete)
-    //const getData = useDataStore((state) => state.getByName)
 
     const addImageData = useDataStore((state) => state.addImage)
     const getImageData = useDataStore((state) => state.getImage)
@@ -60,11 +68,38 @@ export default function Sandbox() {
 
     const [errorMessage, setErrorMessage] = React.useState('')
 
+    const [openSnack, setOpenSnack] = React.useState(false)
+    const [snackMessage, setSnackMessage] = React.useState('')
+    const [snackMode, setSnackMode] = React.useState('success')
+
+    const [messageItems, setMessageItems] = React.useState([])
+
+    const [backgroundImage, setBackgroundImage] = React.useState(null)
+
     React.useEffect(() => {
 
-        document.title = process.env.siteTitle
+        document.title = `My Trip ${process.env.appLocation}` //process.env.siteTitle
 
         setQuery(defSearchKey)
+
+        let flag_backdrop = false
+        if(backdrop) {
+
+            console.log('backdrop', backdrop)
+
+            if(backdrop.key === process.env.appLocation) {
+                flag_backdrop = true
+                const chance = Math.floor(backdrop.image.length * Math.random())
+                setBackgroundImage(backdrop.image[chance].src.large)
+            }
+
+            //setLoading(true) //test
+
+        }
+
+        if(!flag_backdrop) {
+            getImageBackdrop()
+        }
 
         if(data.length > 0) {
 
@@ -73,6 +108,49 @@ export default function Sandbox() {
         }
 
     }, [])
+
+    const getImageBackdrop = async () => {
+
+        console.log("image backdrop")
+
+        try {
+    
+            const response_images = await fetch('/image/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    images: [process.env.appLocation],
+                })
+            })
+
+            const ret_images = await response_images.json()
+
+            console.log('images', ret_images)
+
+            if(ret_images.data[0].data.photos.length > 0) {
+                const chance = Math.floor(ret_images.data[0].data.photos.length * Math.random())
+                const selected_photo = ret_images.data[0].data.photos[chance].src.large
+                setBackdrop({
+                    key: process.env.appLocation,
+                    image: ret_images.data[0].data.photos
+                })
+                setBackgroundImage(selected_photo)
+            }
+
+        } catch(error) {
+            
+            console.log(error.name, error.message)
+
+        }
+
+    }
+
+    const handleCloseSnack = () => {
+        setOpenSnack(false)
+    }
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -85,105 +163,14 @@ export default function Sandbox() {
         
     }
 
-    const handleTrip = async (place) => {
+    const handleTrip = async (inquiry) => {
 
-        let test_place = place
-        let test_decription = ''
-
-        try {
-
-            const response_find = await fetch('/find/', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    inquiry: place,
-                })
-            })
-
-            if(!response_find.ok) {
-                console.log('Oops, an error occurred 1', response_find.status)
-            }
-
-            const result_find = await response_find.json()
-
-            if(result_find.data.content === null) {
-
-                const find_args = JSON.parse(result_find.data.function_call.arguments)
-
-                test_place = find_args.location ? find_args.location : ''
-                test_decription = find_args.hasOwnProperty('description') ? find_args.description : 'day trip'
-
-                const isHokkaido = find_args.hasOwnProperty('isHokkaido') ? find_args.isHokkaido : true
-
-                if(!isHokkaido) {
-                    
-                    //setErrorMessage('Please specify the specific place you want to visit within Hokkaido.')
-                    setErrorMessage(setCaption('error-not-hokkaido'))
-
-                    setLoading(false)
-                    return
-
-                }
-
-            }
-
-        } catch(error) {
-
-            console.log('find', error)
-
-            // we are just assuming here that the error is a result 
-            // of not finding location in prompt.
-
-            test_place = '' 
-            
-        }
-
-        if(test_place.length === 0) {
-
-            //setErrorMessage('Please provide the name of the place you wish to visit.')
-            setErrorMessage(setCaption('error-missing-location'))
-
-            setLoading(false)
-            return
-        }
+        console.log('Creating itinerary...', (new Date()).toLocaleTimeString())
         
-        const previous = []
+        const previous = messageItems.slice(0)
 
-        const system = `You are a helpful travel planner specializing in Hokkaido, Japan.\n` +
-            `You will reply in the following format:\n` +
-            `itinerary-name: Trip Name\n` +
-            `[welcome-message]\n` +
-            `title: welcome message title\n` +
-            `content: welcome message text\n` +
-            `image: welcome image keyword\n` +
-            `[itinerary]\n` +
-            `title: itinerary title\n` +
-            `content: itinerary message text\n` +
-            `image: itinerary image keyword\n` +
-            `places: place1, place2\n` +
-            `[itinerary]\n` +
-            `title: itinerary title\n` +
-            `content: itinerary message text\n` +
-            `image: itinerary image keyword\n` +
-            `places: place1\n` +
-            `[itinerary]\n` +
-            `title: itinerary title\n` +
-            `content: itinerary message text\n` +
-            `image: itinerary image keyword\n` +
-            `places: place1, place2, place3\n` +
-            `[closing-message]\n` +
-            `title: closing message title\n` +
-            `content: closing message text\n` +
-            `image: closing image keyword\n` +
-            `places: place1, place2`
+        setMessageItems((prev) => [...prev, ...[{ role: 'user', content: inquiry }]])
 
-        const inquiry = `Write a Trip Plan for ${test_decription} in ${test_place}`
-
-        console.log(inquiry)
-        
         try {
             
             const response = await fetch('/api/', {
@@ -193,157 +180,130 @@ export default function Sandbox() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    system, // system
-                    inquiry, // inquiry
-                    previous, // previous
+                    inquiry,
+                    previous
                 })
             })
 
-            if(!response.ok) {
-                console.log('Oops, an error occurred', response.status)
-            }
-
             const result = await response.json()
 
-            //console.log(result)
+            console.log("result", result)
 
-            const trip_data = procResult(result.text)
+            if(result.status === 'error') {
+                
+                if(result.text === 'invalid place') {
+                    
+                    setMessageItems([]) // reset
 
-            const image_list = trip_data.data.filter(a => a.key.length > 0).map(a => a.key).filter(a => !getImageData(a))
+                    setSnackMessage(`Please choose a specific place to visit in ${process.env.appLocation}.`)
 
-            if(image_list.length > 0) {
+                } else {
 
-                try {
+                    setMessageItems((prev) => [...prev, ...[{ role: 'assistant', content: result.text }]])
 
-                    const response_images = await fetch('/image/', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            images: image_list,
-                        })
-                    })
-    
-                    if(!response_images.ok) {
-                        console.log("Oops, an error occurred", response_images.status)
-                    }
-    
-                    const ret_images = await response_images.json()
-    
-                    console.log(ret_images)
+                    setSnackMessage(result.text)
 
-                    addImageData(ret_images.data)
-    
-                } catch(error) {
-                    console.log(error)
                 }
+                
+                setSnackMode('info')
+                setOpenSnack(true)
 
-            }
-
-            const newId = getSimpleId()
-
-            const newData = {
-                ...trip_data,
-                id: newId,
-                query: place,
-                content: result.text,
-                datetime: (new Date()).toISOString(),
-            }
-
-            addData(newData)
-
-            router.push(`/trip/${newId}`)
-            
-        } catch(error) {
-            
-            console.log(error)
-
-            //setErrorMessage('Sorry, an unexpected error has occurred. Please try again later.')
-            setErrorMessage(setCaption('error-unexpecte'))
-
-            setLoading(false)
-
-        }
-        
-
-    }
-
-    const getContentType = (txt) => {
-        switch(txt) {
-            case '[welcome-message]':
-                return 0
-            case '[closing-message]':
-                return 1
-            default:
-                return 2
-        }
-    }
-
-    const procResult = (txt) => {
-        
-        let token_str = txt.split('\n').filter(a => a.trim().length > 0)
-
-        let trip_name = ''
-        let content = []
-        let index = -1
-
-        for (let i = 0; i < token_str.length; i++) {
-
-            let str = token_str[i].trim()
-
-            //console.log(i, str)
-
-            if(str.length === 0) continue
-
-            if(str.indexOf('itinerary-name:') >= 0) {
-
-                trip_name = str.substr(15).trim()
-
-            } else if(['[welcome-message]', '[itinerary]', '[closing-message]'].some(a => a === str)) {
-
-                index++
-
-                content[index] = {
-                    id: getSimpleId(),
-                    label: '',
-                    description: '',
-                    type: getContentType(str),
-                    key: '',
-                    image: '',
-                    places: '',
-                }
-
-            } else if(str.indexOf('title:') >= 0) {
-
-                str = str.substr(7).trim()
-
-                content[index].label = str
-
-            } else if(str.indexOf('image:') >= 0) {
-
-                str = str.substr(7).trim()
-
-                content[index].key = str
-
-            } else if(str.indexOf('places:') >= 0) {
-
-                str = str.substr(7).trim()
-
-                content[index].places = str
+                setLoading(false)
 
             } else {
 
-                content[index].description = str.replace('content:', '')
+                setMessageItems([])
 
+                const raw_trip_data = JSON.parse(result.output)
+
+                console.log("raw-trip", raw_trip_data)
+
+                let all_image_keys = []
+
+                for(let panel in raw_trip_data) {
+                    if(raw_trip_data.hasOwnProperty(panel)) {
+                        if(panel == 'welcome' || panel == 'closing') {
+                            all_image_keys.push(raw_trip_data[panel].image)
+                        } else if(panel == 'itineraries') {
+                            for(let item of raw_trip_data[panel]) {
+                                all_image_keys.push(item.image)
+                            }
+                        }
+                    }
+                }
+
+                const image_keys = all_image_keys.filter((img) => !getImageData(img))
+
+                if(image_keys.length > 0) {
+                    
+                    console.log("image-list", image_keys)
+
+                    await getPicsFromImageServer(image_keys)
+
+                }
+
+                const newId = getSimpleId()
+
+                const newData = {
+                    ...raw_trip_data,
+                    id: newId,
+                    query: inquiry,
+                    content: raw_trip_data,
+                    datetime: (new Date()).toISOString(),
+                    images: all_image_keys,
+                }
+
+                addData(newData)
+
+                setTimeout(() => {
+                    router.push(`/trip/${newId}`)
+                }, 200) // Add delay
+                
             }
 
-        }
+        } catch(error) {
+            
+            console.log("main", error.name, error.message)
 
-        return {
-            name: trip_name,
-            data: content,
+            setMessageItems([])
+
+            setSnackMessage('Sorry, an unexpected error has occurred. Please try again. If the problem persists, consider checking your internet connection or restarting your device.')
+
+            setSnackMode('error')
+            setOpenSnack(true)
+
+            setLoading(false)
+            
+        }
+        
+
+    }
+
+    const getPicsFromImageServer = async (images) => {
+
+        try {
+    
+            const response_images = await fetch('/image/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    images: images,
+                })
+            })
+
+            const ret_images = await response_images.json()
+
+            console.log('images', ret_images)
+
+            addImageData(ret_images.data)
+
+        } catch(error) {
+            
+            console.log(error.name, error.message)
+
         }
 
     }
@@ -380,8 +340,12 @@ export default function Sandbox() {
         setSearchKey(s)
     }
 
+    const getRecommendCaption = (n) => {
+        return n > 1 ? `Here are your ${n} suggestions` : `Here's a suggestion for you`
+    }
+
     const dataFiltered = dataItems.filter((item) => {
-        return deferredQuery.length > 2 ? (item.name.toLowerCase().indexOf(deferredQuery.toLowerCase()) >= 0 || item.query.toLowerCase().indexOf(deferredQuery.toLowerCase()) >= 0) : false
+        return deferredQuery.length > 2 ? (item.title.toLowerCase().indexOf(deferredQuery.toLowerCase()) >= 0 || item.query.toLowerCase().indexOf(deferredQuery.toLowerCase()) >= 0) : false
     }).sort((a, b) => {
         if(a.datetime > b.datetime) return -1
         if(a.datetime < b.datetime) return 1
@@ -389,7 +353,13 @@ export default function Sandbox() {
     })
 
     return (
-        <div className={classes.container}>
+        <React.Fragment>
+        <div className={classes.container} style={{
+            backgroundImage: `radial-gradient(circle at right bottom, #fffb 5%, #fff), url("${backgroundImage}")`,
+            //backgroundImage: `linear-gradient(#fff 15%, transparent 95%), url("${backgroundImage}")`,
+            backgroundSize: 'cover',
+            //backgroundBlendMode: 'screen',
+        }}>
             <div className={classes.main}>
                 <div className={classes.search}>
                     <CustomTheme>
@@ -400,7 +370,7 @@ export default function Sandbox() {
                             <TextField 
                             error={errorMessage.length > 0}
                             helperText={errorMessage}
-                            placeholder={setCaption('placeholder-search')}
+                            placeholder={`Day trip in ${process.env.appLocation}`}
                             disabled={isLoading}
                             fullWidth
                             inputRef={searchRef}
@@ -433,9 +403,8 @@ export default function Sandbox() {
                 { 
                     dataFiltered.length > 0 &&
                     <div className={classes.recommended}>
-                        <h4 className={classes.title}>
-                            { dataFiltered.length > 1 ? `${setCaption('suggestion1')} ${dataFiltered.length} ${setCaption('suggestion2')}` : setCaption('suggestion3') }
-                        </h4>
+                        <h4 className={classes.title}>{ getRecommendCaption(dataFiltered.length) }</h4>
+                        <div className={classes.listPanel}>
                         <ul className={classes.list}>
                             {
                                 dataFiltered.map((item) => {
@@ -445,21 +414,38 @@ export default function Sandbox() {
                                         <li key={item.id} className={classes.listItem}>
                                             <div className={item.id === paramId ? [classes.itemContainer, classes.selected].join(' ') : classes.itemContainer}>
                                                 <div className={classes.item}>
-                                                    <Link className={classes.link} href={`/trip/${item.id}`} onClick={() => setLoading(true)}>
-                                                        <div className={classes.name}>
-                                                            <span>{ item.name }</span>
-                                                        </div>
-                                                    </Link>
+                                                    <div className={classes.itemTop}>
+                                                        <Link className={classes.link} href={`/trip/${item.id}`} onClick={() => setLoading(true)}>
+                                                            <div className={classes.name}>
+                                                                <span>{ item.title }</span>
+                                                            </div>
+                                                        </Link>
+                                                        <CustomTheme>
+                                                            <IconButton sx={{ marginLeft: '5px' }} size='small' onClick={() => handleDelete(item.id, item.title)}>
+                                                                <DeleteIcon fontSize='inherit' className={classes.deleteIcon} />
+                                                            </IconButton>
+                                                        </CustomTheme>
+                                                    </div>
                                                     <div className={classes.datetime}>
                                                         <span className={classes.date}>{ sDateTime }</span><span className={classes.ago}>{ sAgo }</span>
                                                     </div>
                                                 </div>
-                                                <div className={classes.delete}>
-                                                    <CustomTheme>
-                                                        <IconButton onClick={() => handleDelete(item.id, item.name)}>
-                                                            <DeleteIcon sx={{color: '#a3a0a2'}} />
-                                                        </IconButton>
-                                                    </CustomTheme>
+                                                <div className={classes.images}>
+                                                {
+                                                    item.images && item.images.filter((img, index) => {
+                                                        const photos = getImageData(img)
+                                                        if(!photos) return false
+                                                        if(photos.data.photos.length === 0) return false
+                                                        return index < 5
+                                                    }).map((img, index) => {
+                                                        const photos = getImageData(img)
+                                                        const chance = Math.floor(photos.data.photos.length * Math.random())
+                                                        const photo = photos.data.photos[chance]
+                                                        return (
+                                                            <img key={index} className={classes.thumb} src={photo.src.tiny} alt={photo.alt} />
+                                                        )
+                                                    })
+                                                }
                                                 </div>
                                             </div>
                                         </li>
@@ -467,6 +453,7 @@ export default function Sandbox() {
                                 })
                             }
                         </ul>
+                        </div>
                     </div>
                 }
                 
@@ -489,5 +476,11 @@ export default function Sandbox() {
                 )
             }
         </div>
+            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
+                <Alert onClose={handleCloseSnack} severity={snackMode} sx={{ width: '90%' }}>
+                { snackMessage }
+                </Alert>
+            </Snackbar>
+        </React.Fragment>
     )
 }

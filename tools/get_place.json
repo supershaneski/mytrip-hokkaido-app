@@ -1,0 +1,22 @@
+{
+    "name": "get_place",
+    "description": "Extract name of place and theme or activity for the trip in the given texts and check if it is located in Hokkaido, Japan.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "place": {
+                "type": "string",
+                "description": "The name of the actual geographical location for the trip. This should be a recognized place name such as a town, city, region, country, or state. Abstract or generic locations like 'countryside' are not accepted."
+            },
+            "itinerary": {
+                "type": "string",
+                "description": "The theme or activity that the user is interested"
+            },
+            "isLocationValid": {
+                "type": "boolean",
+                "description": "Flag that tells whether the place is located in Hokkaido or not."
+            }
+        },
+        "required": [ "place", "itinerary", "isLocationValid" ]
+    }
+}

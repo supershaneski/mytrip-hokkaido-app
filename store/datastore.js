@@ -6,6 +6,8 @@ const useDataStore = create(
         (set, get) => ({
             data: [],
             images: [],
+            backdrop: undefined,
+            setBackdrop: ({ key, image }) => set({ backdrop: { key, image } }),
             addImage: (item) => {
                 
                 let images = get().images.slice(0)
@@ -25,8 +27,6 @@ const useDataStore = create(
                     images.push(item)
 
                 }
-
-                //console.log(images)
 
                 set({ images })
             },

@@ -14,6 +14,7 @@
 }
 
 .search {
+    background-color: #fff9;
     position: relative;
     width: 100%;
 }
@@ -21,6 +22,18 @@
 .recommended {
     position: relative;
     margin-top: 2rem;
+    height: calc(100vh - 150px);
+}
+.listPanel {
+    position: relative;
+    height: calc(100% - 28px);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.listPanel::-webkit-scrollbar {
+    display: none;
 }
 
 .title {
@@ -37,7 +50,7 @@
     margin-bottom: 8px;
 }
 .listItem:last-child {
-    margin-bottom: 0;
+    margin-bottom: 2rem;
 }
 
 .itemContainer {
@@ -49,6 +62,7 @@
     z-index: 1;
 }
 .delete {
+    display: none;
     position: absolute;
     right: 0;
     top: 0;
@@ -60,16 +74,15 @@
 }
 
 .name {
-    flex-grow: 1;
-    max-width: calc(100% - 45px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #6578b4;
 }
 .name span {
     text-transform: capitalize;
     font-weight: 600;
+    color: #6578b4;
+    mix-blend-mode: screen;
 }
 
 .datetime {
@@ -82,14 +95,43 @@
     margin-left: 8px;
 }
 .date {
-    font-size: .9rem;
+    font-size: .8rem;
     color: #a3a0a2;
 }
 
 .link {
     text-decoration: none;
+    position: relative;
+    margin: 0;
+    padding: 0;
 }
 .link:hover {
     text-decoration: underline;
-    color: #6578b4;
+}
+.images {
+    display: flex;
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+    overflow-x: hidden;
+}
+.thumb {
+    margin: 0;
+    padding: 0;
+    width: 100px;
+    height: 70px;
+    object-fit: contain;
+}
+.thumb + .thumb {
+    margin-left: 5px;
+}
+.itemTop {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.deleteIcon {
+    color: #f66c;
+    mix-blend-mode: screen;
 }

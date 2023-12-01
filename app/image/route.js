@@ -19,7 +19,9 @@ export async function POST(request) {
 
             try {
 
-                const data = await fetch(`https://api.pexels.com/v1/search?per_page=3&query=${image}`, {
+                const search_key = image.split("_").join("%20")
+
+                const data = await fetch(`https://api.pexels.com/v1/search?per_page=3&query=${search_key}`, {
                         method: "GET",
                         headers: {
                             Accept: "application/json",
@@ -29,6 +31,8 @@ export async function POST(request) {
                 
                 const ret = await data.json()
 
+                console.log(image, ret)
+
                 return {
                     id: getUniqueId2(),
                     key: image,
@@ -37,7 +41,7 @@ export async function POST(request) {
 
             } catch(error) {
                 
-                console.log(error)
+                console.log(image, error.name, error.messages)
 
                 return null
 

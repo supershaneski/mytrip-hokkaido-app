@@ -1,0 +1,90 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string",
+            "description": "main title for the whole itinerary"
+        },
+        "welcome": {
+            "type": "object",
+            "description": "welcome panel",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "title for introduction message"
+                },
+                "text": {
+                    "type": "string",
+                    "description": "introduction message about the itinerary"
+                },
+                "image": {
+                    "type": "string",
+                    "description": "image keyword for welcome panel"
+                }
+            },
+            "required": ["title", "text", "image"]
+        },
+        "itineraries": {
+            "type": "array",
+            "description": "itinerary item",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "title for itinerary"
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "description of itinerary"
+                    },
+                    "image": {
+                        "type": "string",
+                        "description": "image keyword for itinerary panel"
+                    },
+                    "places": {
+                        "type": "array",
+                        "description": "notable places to included in this itinerary",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": ["title", "text", "image", "places"]
+            }
+        },
+        "closing": {
+            "type": "object",
+            "description": "closing panel",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "title for closing message"
+                },
+                "text": {
+                    "type": "string",
+                    "description": "closing message about the itinerary"
+                },
+                "image": {
+                    "type": "string",
+                    "description": "image keyword for closing panel"
+                },
+                "places": {
+                    "type": "array",
+                    "description": "notable places to from all itineraries",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": ["title", "text", "image", "places"]
+        }
+    },
+    "required": [
+        "title",
+        "welcome",
+        "itineraries",
+        "closing"
+    ]
+}

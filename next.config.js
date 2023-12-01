@@ -8,7 +8,8 @@ const nextConfig = {
       return config
     },
     env: {
-        siteTitle: 'My Trip Hokkaido',
+      siteTitle: 'My Trip Hokkaido',
+      appLocation: process.env.APP_LOCATION,
     },
     trailingSlash: true,
     experimental: {
