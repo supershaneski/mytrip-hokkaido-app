@@ -4,9 +4,13 @@ import { trim_array } from '../../lib/utils'
 import get_place_function from '../../tools/get_place.json'
 import output_schema from '../../tools/output_schema.json'
 
+import supported_language from '../../assets/supported_language.json'
+
+/*
 const wait = (delay) => {
     return new Promise((resolve) => setTimeout(resolve, delay))
 }
+*/
 
 export async function POST(request) {
 
@@ -66,8 +70,9 @@ export async function POST(request) {
 
         const target_activity = tmp_tool_item_arg.itinerary
         const target_place = tmp_tool_item_arg.place
+        const target_lang = tmp_tool_item_arg.language
 
-        console.log(tmp_tool_item_arg)
+        console.log("tool", tmp_tool_item_arg)
 
         if(!tmp_tool_item_arg.isLocationValid) {
 
@@ -81,9 +86,22 @@ export async function POST(request) {
 
         }
 
+        let language_text = ''
+
+        if(target_lang !== 'en' && supported_language.languages.find((lang) => lang.code === target_lang)) {
+            language_text = supported_language.languages.find((lang) => lang.code === target_lang).name
+        }
+
         system_prompt = `You are a helpful travel planner specializing in ${APP_PLACE_NAME} and designed to output json.\n` +
             `Your output is to an API.\n` +
-            `Create valid json complying to the schema.\n\n` +
+            `Create valid json complying to the schema.\n\n`
+        
+        if(target_lang !== 'en' && language_text) {
+            system_prompt += `# language\n` +
+                `Please write reply in ${language_text} language.\n\n`
+        }
+            
+        system_prompt += `# today\n` +
             `Today is ${new Date()}.\n\n` +
             `# json output schema\n` +
             JSON.stringify(output_schema, null, 2)

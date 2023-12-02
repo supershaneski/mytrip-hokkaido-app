@@ -12,11 +12,15 @@
                 "type": "string",
                 "description": "The theme or activity that the user is interested"
             },
+            "language": {
+                "type": "string",
+                "description": "The primary language used in the user textin ISO 639-1 code"
+            },
             "isLocationValid": {
                 "type": "boolean",
                 "description": "Flag that tells whether the place is located in Hokkaido or not."
             }
         },
-        "required": [ "place", "itinerary", "isLocationValid" ]
+        "required": [ "place", "itinerary", "language", "isLocationValid" ]
     }
 }
