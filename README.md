@@ -13,6 +13,7 @@ This sample project is a regional travel planning app that uses artificial intel
 **Updated**: 
 * Using [v4.20.1 OpenAI Node module](https://www.npmjs.com/package/openai).
 * You can now [customize the location](#customize-location)!
+* Added [different language support](#language-support) for the output!
 
 
 # Application
@@ -46,11 +47,33 @@ Itinerary screen
 ![Kola Bay](./docs/screenshot04.png "Kola Bay")
 
 
+# Language Support
+
+After enabling location customization, it becomes necessary to let the language of user input to dictate the output. 
+
+Here are several examples of the screens in different languages:
+
+* Japanese: 札幌、一泊、ジンギスカン、カラオケ (Sapporo, Overnight, Jingisukan, Karaoke)
+
+![Japanese - Main](./docs/jp_screen.png "Japanese - Main")
+![Japanese - Itinerary](./docs/jp_itinerary.png "Japanese - Itinerary")
+
+* Korean: 삿포로 쇼핑여행 (Shopping trip in Sapporo)
+
+![Korean - Main](./docs/kr_screen.png "Korean - Main")
+![Korean - Itinerary](./docs/kr_itinerary.png "Korean - Itinerary")
+
+* Russian: Поездка на горячие источники в Отару (Hot spring trip in Otaru)
+
+![Russian - Main](./docs/ru_screen.png "Russian - Main")
+![Russian - Itinerary](./docs/ru_itinerary.png "Russian - Itinerary")
+
+
 # Chat Completions API
 
-From the previous version of this app, I refactor the code and optimized calling the API.
+I have refactored and optimized the code from the previous version of this app, particularly focusing on improving the efficiency of API calls.
 
-First, I used **function calling** to check if the location given is within the indicated region.
+First, I implemented **function calling** to verify whether the given location falls within the specified region.
 
 ```javascript
 {
@@ -67,17 +90,23 @@ First, I used **function calling** to check if the location given is within the 
                 "type": "string",
                 "description": "The theme or activity that the user is interested"
             },
+            "language": {
+                "type": "string",
+                "description": "The primary language used in the user textin ISO 639-1 code"
+            },
             "isLocationValid": {
                 "type": "boolean",
                 "description": "Flag that tells whether the place is located in Hokkaido or not."
             }
         },
-        "required": [ "place", "itinerary", "isLocationValid" ]
+        "required": [ "place", "itinerary", "language", "isLocationValid" ]
     }
 }
 ```
 
-If `isLocationValid` is **TRUE** then I submit either the exact user query or `itinerary` and `place` from the **function calling** result. The next API call does not use any function calling at all but we prepared a JSON output and enabled `response_format`.
+This function serves as the primary workhorse for the application. It's worth noting the various parameters it accepts, aside from **place** and **language**. These additional parameters play a crucial role in generating the output. For instance, the **language** parameter determines the language of the output.
+
+If **isLocationValid** is TRUE, I proceed to submit either the exact user query or utilize the itinerary and place from the result of the function call in the next API call. Unlike the initial function call, this next API call does not involve any additional function calls. Instead, we have prepared a JSON output and enabled **response_format**.
 
 ```javascript
 const response = await openai.chat({
@@ -86,18 +115,20 @@ const response = await openai.chat({
 })
 ```
 
-To set **response_format** using JSON, it is ***very important that you implicitly tells the AI to output JSON in the system prompt***. Otherwise, you will find some unexpected result.
+When configuring **response_format** using JSON, it is important to explicitly instruct the AI to output JSON in the system prompt. Failure to do so may result in unexpected outcomes.
 
 ```javascript
 const system_prompt = `You are a helpful travel planner specializing in ${APP_PLACE_NAME} and designed to output json.\n` +
     `Your output is to an API.\n` +
     `Create valid json complying to the schema.\n\n` +
+    `# language\n` +
+    `Please write reply in ${language_text} language.\n\n` +
     `Today is ${new Date()}.\n\n` +
     `# json output schema\n` +
     JSON.stringify(output_schema, null, 2)
 ```
 
-We also provided the JSON schema for the output
+We also included the JSON schema for the output to provide clarity and structure.
 
 ```javascript
 {
